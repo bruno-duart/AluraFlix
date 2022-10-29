@@ -16,28 +16,37 @@ namespace AluraFlix.Controllers
     {
         private static List<Videos> ListaVideos = new List<Videos>();
         private static int Id = 0;
+        private AluraFlixDBContext _context;
         private IMapper _mapper;
 
-        public VideosController()
+        public VideosController(AluraFlixDBContext context, IMapper mapper)
         {
+            _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public List<Videos> GetVideos()
+        public IEnumerable<Videos> GetVideos()
         {
-            return ListaVideos;
+            return _context.Videos;
         }
 
         [HttpGet("{id}")]
-        public Videos GetVideoById(int id)
+        public IActionResult GetVideoById(int id)
         {
-            return ListaVideos.FirstOrDefault(video => video.Id == id);
+            Videos Video = _context.Videos.FirstOrDefault(video => video.Id == id);
+            if (Video == null)
+            {
+                return NotFound();
+            }
+            ReadVideosDTO read = _mapper.Map<ReadVideosDTO>(Video);
+            return Ok(Video);
         }
 
         [HttpPost]
-        public Videos PostVideos([FromBody] CreateVideosDTO NovoVideoDTO)
+        public IActionResult PostVideos([FromBody] CreateVideosDTO NovoVideoDTO)
         {
-            Videos NovoVideo = new Videos()
+            /*Videos NovoVideo = new Videos()
             {
                 Id = Id++,
                 Titulo = NovoVideoDTO.Titulo,
@@ -49,13 +58,18 @@ namespace AluraFlix.Controllers
             Console.WriteLine(NovoVideo.Descricao);
             Console.WriteLine(NovoVideo.Url);
             Console.WriteLine(NovoVideo.Id);
-            return NovoVideo;
+            return NovoVideo;*/
+
+            Videos NovoVideo = _mapper.Map<Videos>(NovoVideoDTO);
+            _context.Videos.Add(NovoVideo);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(GetVideoById), new { Id = NovoVideo.Id }, NovoVideo);
         }
 
         [HttpPut("{id}")]
-        public Videos PutVideosById(int id, [FromBody] UpdateVideosDTO UpdateVidDTO)
+        public IActionResult PutVideosById(int id, [FromBody] UpdateVideosDTO UpdateVidDTO)
         {
-            Videos UpdateVideo = ListaVideos.FirstOrDefault(video => video.Id == id);
+            /*Videos UpdateVideo = ListaVideos.FirstOrDefault(video => video.Id == id);
             if(UpdateVideo == null)
             {
                 return null;
@@ -63,20 +77,36 @@ namespace AluraFlix.Controllers
             UpdateVideo.Titulo = UpdateVidDTO.Titulo;
             UpdateVideo.Descricao = UpdateVidDTO.Descricao;
             UpdateVideo.Url = UpdateVidDTO.Url;
-            return UpdateVideo;
+            return UpdateVideo;*/
+            Videos Videos = _context.Videos.FirstOrDefault(video => video.Id == id);
+            if (Videos == null)
+            {
+                return NotFound(Videos);
+            }
+            Videos = _mapper.Map(UpdateVidDTO, Videos);
+            _context.SaveChanges();
+            return Ok(Videos);
         }
 
         [HttpDelete("{id}")]
-        public void DeleteVideosById(int id)
+        public IActionResult DeleteVideosById(int id)
         {
-            Videos DeleteVideo = ListaVideos.FirstOrDefault(video => video.Id == id);
+            /*Videos DeleteVideo = ListaVideos.FirstOrDefault(video => video.Id == id);
             if(DeleteVideo == null)
             {
                 Console.WriteLine("Não há vídeo com este Id");
                 return;
             }
             ListaVideos.Remove(DeleteVideo);
-            Console.WriteLine($"Vídeo {id} removido");
+            Console.WriteLine($"Vídeo {id} removido");*/
+            Videos Videos = _context.Videos.FirstOrDefault(Videos => Videos.Id == id);
+            if (Videos == null)
+            {
+                return NotFound();
+            }
+            _context.Videos.Remove(Videos);
+            _context.SaveChanges();
+            return NoContent();
         }
     }
 }
