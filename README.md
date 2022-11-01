@@ -1,2 +1,4 @@
 # AluraFlix
- #alurachallengebackend5
+ 
+ Repositório criado para o #alurachallengebackend5
+ Desenvolvido em Asp .net Core
