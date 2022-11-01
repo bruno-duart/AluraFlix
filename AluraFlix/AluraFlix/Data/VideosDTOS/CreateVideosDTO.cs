@@ -11,6 +11,7 @@ namespace AluraFlix.Data.VideosDTOS
         [StringLength(1000, ErrorMessage = "Descrição do Vídeo não pode exceder 1000 caracteres")]
         public string Descricao { get; set; }
         [Required]
+        [Url]
         public string Url { get; set; }
     }
 }
