@@ -1,4 +1,4 @@
-﻿using AluraFlix.Data.VideosDTOS;
+﻿using AluraFlix.Data.CategoriasDTOS;
 using AluraFlix.Models;
 using AutoMapper;
 
@@ -8,9 +8,9 @@ namespace AluraFlix.Profiles
     {
         public CategoriasProfile()
         {
-            CreateMap<CreateVideosDTO, Categorias>();
-            CreateMap<Categorias, ReadVideosDTO>();
-            CreateMap<UpdateVideosDTO, Categorias>();
+            CreateMap<CreateCategoriasDTO, Categorias>();
+            CreateMap<Categorias, ReadCategoriasDTO>();
+            CreateMap<UpdateCategoriasDTO, Categorias>();
         }
     }
 }
