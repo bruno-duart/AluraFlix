@@ -76,7 +76,7 @@ namespace AluraFlix.Controllers
             {
                 return NotFound();
             }
-            AtualizaCategoria = _mapper.Map<Categorias>(categoriasDTO);
+            AtualizaCategoria = _mapper.Map(categoriasDTO, AtualizaCategoria);
             return Ok(AtualizaCategoria);
         }
 
