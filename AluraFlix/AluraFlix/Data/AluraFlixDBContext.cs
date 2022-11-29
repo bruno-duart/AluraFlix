@@ -11,5 +11,6 @@ namespace AluraFlix.Data
         }
 
         public DbSet<Videos> Videos { get; set; }
+        public DbSet<Categorias> Categorias { get; set; }
     }
 }
